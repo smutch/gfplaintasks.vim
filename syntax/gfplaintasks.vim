@@ -4,7 +4,7 @@
 " Original: David Elentok
 " Filenames: *.todo.md
 
-if exists("b:current_syntax")
+if "b:current_syntax" == "gfplaintasks"
   finish
 endif
 
@@ -23,3 +23,5 @@ syn match ptCompleteTask "^ *- \[x\].*" contains=ptContext
 syn match ptContext "@[^ ]*"
 syn match ptCancelled "^ *- X.*"
 " syn match ptLine "^----*"
+
+let b:current_syntax = "gfplaintasks"
