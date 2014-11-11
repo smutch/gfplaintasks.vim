@@ -16,7 +16,8 @@ nnoremap <buffer> _ :call ArchiveTasks()<cr>
 abbr -- <c-r>=Separator()<cr>
 
 " when pressing enter within a task it creates another task
-setlocal comments+=nb:-\ [\ ]
+setlocal comments-=fb:-
+setlocal comments+=nb:-\ [\ ],fb:-
 setlocal fo+=ro
 
 function! ToggleComplete()
