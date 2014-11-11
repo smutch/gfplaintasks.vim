@@ -12,7 +12,7 @@ endif
 nnoremap <buffer> + :call NewTask()<cr>A
 nnoremap <buffer> = :call ToggleComplete()<cr>
 nnoremap <buffer> <C-M> :call ToggleCancel()<cr>
-nnoremap <buffer> - :call ArchiveTasks()<cr>
+nnoremap <buffer> _ :call ArchiveTasks()<cr>
 abbr -- <c-r>=Separator()<cr>
 
 " when pressing enter within a task it creates another task
@@ -65,12 +65,14 @@ function! ArchiveTasks()
         normal! o
         normal! o# Archive
         normal! o
+        normal! 0D
         let archive_start = line('$') - 1
     endif
     call cursor(1,1)
 
     let found=0
     let a_reg = @a
+    let @a = ""
     if search("- \\[x\\]", "", archive_start) != 0
         call cursor(1,1)
         while search("- \\[x\\]", "", archive_start) > 0
