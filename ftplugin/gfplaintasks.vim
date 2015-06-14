@@ -9,11 +9,11 @@ if exists("b:did_ftplugin")
   finish
 endif
 
-nnoremap <buffer> + :call NewTask()<cr>A
-nnoremap <buffer> = :call ToggleComplete()<cr>
-nnoremap <buffer> <C-M> :call ToggleCancel()<cr>
+nnoremap <buffer> + :call ToggleTask()<cr>
+nnoremap <buffer> <CR> :call ToggleComplete()<cr>
+nnoremap <buffer> <LocalLeader><CR> :call ToggleCancel()<cr>
 nnoremap <buffer> _ :call ArchiveTasks()<cr>
-abbr -- <c-r>=Separator()<cr>
+abbr --- <c-r>=Separator()<cr>
 
 " when pressing enter within a task it creates another task
 setlocal comments-=fb:-
@@ -46,12 +46,17 @@ function! ToggleCancel()
   endif
 endfunc
 
-function! NewTask()
+function! ToggleTask()
   let line=getline('.')
   if line =~ "^ *$"
-    normal! A- [ ] 
+    normal! A- [ ]<C-o>A
   else
-    normal! I- [ ] 
+    if line =~ "^ *- \\[ \\] .*"
+        echomsg "case a"
+        normal! ^df]i*
+    elseif line =~ "^ *[\*-] .*"
+        normal! ^xxI- [ ] 
+    endif
   end
 endfunc
 
@@ -100,6 +105,6 @@ function! Separator()
     if line =~ "^-*$"
       return "--------------------------"
     else
-      return "--"
+      return "---"
     end
 endfunc

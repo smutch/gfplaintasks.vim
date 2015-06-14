@@ -8,7 +8,7 @@ if "b:current_syntax" == "gfplaintasks"
   finish
 endif
 
-runtime! syntax/markdown.vim syntax/markdown/*.vim
+runtime! syntax/mkd.vim syntax/mkd/*.vim
 
 hi def link ptTask Identifier
 hi def link ptCompleteTask Comment
@@ -20,7 +20,7 @@ hi def link ptContext Question
 " syn match ptSection "^#.* *$"
 syn match ptTask "^ *- \[ \].*" contains=ptContext
 syn match ptCompleteTask "^ *- \[x\].*" contains=ptContext
-syn match ptContext "@[^ ]*"
+syn match ptContext "@[^ ]*" "containedin=ALL contained
 syn match ptCancelled "^ *- X.*"
 " syn match ptLine "^----*"
 
