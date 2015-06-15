@@ -6,8 +6,10 @@
 
 " Only do this when not done yet for this buffer
 if exists("b:did_ftplugin")
-  finish
+    finish
 endif
+
+let s:show_tags_flag = 0
 
 nnoremap <buffer> + :call ToggleTask()<cr>
 nnoremap <buffer> <CR> :call ToggleComplete()<cr>
@@ -108,3 +110,52 @@ function! Separator()
       return "---"
     end
 endfunc
+
+function! s:OpenSearchFolds(e)
+    let s:show_tags_flag = 1
+    let s:old_fold_expr = &foldexpr
+    let s:old_foldminlines = &foldminlines
+    let s:old_foldtext = &foldtext
+    let s:old_foldlevel = &foldlevel
+    let s:old_fillchars = &fillchars
+    let regex = '\\('.a:e.'\\\\|^#\\)'
+    " exec "setlocal foldexpr=(getline(v:lnum)=~'".regex."')?0:1"
+    exec "setlocal foldexpr=(getline(v:lnum)=~'".regex."')?0:(getline(v:lnum-1)=~'".regex."')\\|\\|(getline(v:lnum+1)=~'".regex."')?1:2"
+    setlocal foldlevel=0 fml=0 foldtext='\ ' fillchars="fold: "
+endfunction
+
+function! s:VimGrepKW(e)
+    exec "normal! :lvimgrep /" . a:e . "/ %\<CR>:lopen\<CR>"
+endfunction
+
+function! ShowTags(grepflag)
+    if (s:show_tags_flag == 1)
+        let &l:foldexpr = s:old_fold_expr
+        let s:show_tags_flag = 0
+        let &l:foldminlines = s:old_foldminlines
+        let &l:foldtext = s:old_foldtext
+        let &l:foldlevel = s:old_foldlevel
+        let &l:fillchars = s:old_fillchars
+        return
+    endif
+
+    let word = expand("<cWORD>")
+    let regexp = '@\w\+'
+
+    let sink = '<SID>OpenSearchFolds'
+    if a:grepflag == 1
+        let sink = '<SID>VimGrepKW'
+    endif
+
+    if word =~ regexp
+        exec 'call '.sink.'(word)'
+    else
+        call fzf#run({
+                    \   'source':  'grep --line-buffered --color=never -roh "' . regexp . '" ' . fnameescape(@%) . ' | uniq',
+                    \   'sink': function(sink)
+                    \ })
+    endif
+endfunction
+
+nnoremap <buffer><silent> <Localleader>nt :call ShowTags(1)<CR>
+nnoremap <buffer><silent> <Localleader><Localleader> :call ShowTags(0)<CR>

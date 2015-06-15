@@ -18,10 +18,13 @@ hi def link ptContext Question
 " hi def link ptLine Function
 
 " syn match ptSection "^#.* *$"
-syn match ptTask "^ *- \[ \].*" contains=ptContext
-syn match ptCompleteTask "^ *- \[x\].*" contains=ptContext
+syn match ptTask "^ *- \[ \].*" contains=ptContext,ptItem
+syn match ptCompleteTask "^ *- \[x\].*" contains=ptContext,ptCompleteMark,ptItem
 syn match ptContext "@[^ ]*" "containedin=ALL contained
-syn match ptCancelled "^ *- X.*"
+syn match ptCancelled "^ *[-*] X.*" contains=ptItem
 " syn match ptLine "^----*"
+syn match ptItem "^ *[-*]" contains=ptBullet,ptCompleteMark
+syn match ptCompleteMark "\[x\]" contained conceal cchar=✔
+syn match ptBullet "[-*]" contained conceal cchar=•
 
 let b:current_syntax = "gfplaintasks"
