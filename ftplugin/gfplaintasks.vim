@@ -15,7 +15,7 @@ nnoremap <buffer> + :call ToggleTask()<cr>
 nnoremap <buffer> <CR> :call ToggleComplete()<cr>
 nnoremap <buffer> <LocalLeader><CR> :call ToggleCancel()<cr>
 nnoremap <buffer> _ :call ArchiveTasks()<cr>
-abbr --- <c-r>=Separator()<cr>
+" abbr --- <c-r>=Separator()<cr>
 
 " when pressing enter within a task it creates another task
 setlocal comments-=fb:-
